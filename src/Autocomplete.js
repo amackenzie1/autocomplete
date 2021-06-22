@@ -1,5 +1,36 @@
 import React, { Component, Fragment } from "react";
 import './styles.css'
+import {findBestMatch, compareTwoStrings} from "string-similarity";
+
+
+function compare(a, b){
+  if (a.rating > b.rating){
+      return -1;
+  } else if (a.rating < b.rating){
+      return 1;
+  }
+  else {
+      return 0;
+  }
+}
+
+
+function score(text, query){
+  text = text.toLowerCase().split(" ");
+  query = query.toLowerCase().split(" ");
+  var total_score = 0
+  for (var i in text){
+      for (var j in query){
+          total_score += compareTwoStrings(text[i], query[j])**2
+      }
+  }
+  return total_score
+}
+
+function make_object(text, query){
+  return {"target": text, "rating": score(text, query)};
+}
+
 
 class Autocomplete extends Component {
   constructor(props) {
@@ -15,10 +46,13 @@ class Autocomplete extends Component {
     const { suggestions } = this.props;
     const userInput = e.currentTarget.value;
   
-    const filteredSuggestions = suggestions.filter(
+    /*const filteredSuggestions = suggestions.filter(
       suggestion =>
         suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1
-    );
+    );*/
+
+    var results = suggestions.map((x) => make_object(x, userInput))
+    const filteredSuggestions = results.sort(compare).map((object) => object.target).slice(0, 5);
   
     this.setState({
       activeSuggestion: 0,
@@ -106,6 +140,7 @@ class Autocomplete extends Component {
             onChange={onChange}
             onKeyDown={onKeyDown}
             value={userInput}
+            spellcheck="false"
           />
           {suggestionsListComponent}
         </Fragment>
