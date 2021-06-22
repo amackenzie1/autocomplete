@@ -1,0 +1,83 @@
+import {decrypt} from "sjcl"
+
+var queries = 
+[
+    '{"iv":"nzfVfKy/nZU9VKCxe5yzjg==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"01Y3xaN6tzGIQk9ujv11DMjegnyMu1dl3QBtH5C3HRZWMXhDyX5f3TFcJAhKbJJUqihMQsjgdpi5rRuL967EAw=="}',
+    '{"iv":"Mh2xRYyouifiJDseA/suYw==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"ZzUW4V/e/ZV/wtIZdoA+xDSvorVaDM9Ljyvr4EPqy4LOrwl3oYVgooAHdEM+hHcqZI8ARjEuDgtX+8MJtmuih8y2hjYc"}',
+    '{"iv":"V52R1xmgeFy4kSvZqLcE0w==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"e7QoYUTf7eem3eSGibGfAIMIXff1nxkcXwIKz3YR8PWkBwlUMFbG8rCFkDoue7kTUUK3ddBJZns55PCjUME99mnyeX4/qY78+P7hqkWvUDbyTn8pB0wS1iRZXTIYifJ/l9ZK4GyXZ6U+rX5aC7vBoFwUvaZ9Qs8lkpYtG9NK4S/HjYzyGg=="}',
+    '{"iv":"kArVAgT4gskhvhxJor/L1A==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"zX4tPVckMu8/cH4/kZOqP8KaFe3JyOPTS087UEttuenWjQHLoGro97B+HMbbm6vUdlBP1eRAJryNKvrzlNsQ2PJlT4ilzeqMOKd/ZbzqlWlqOCZDfDdA18M="}',
+    '{"iv":"XwJfu16NrfKA6m2Cg5PCVA==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"n4YqQfttHZ7FEzJKK+XMD0fin8e0ztWN5ZWoNRHmwDHhlnWKLFI1jik0YvGtIUyuV7JeVMQVTog3PvpLbq58hz5uTov/pfYLhA=="}',
+    '{"iv":"JrGWS4HmBvot2iaUct97lg==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"ppTjzjA77htYU08PXMv8+NM/fjBsqnZff+DerOFkUSZ8vcdwR+6y5u0VbciCn8vF"}',
+    '{"iv":"NdHe+vImDKJKCnNM5R7BfA==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"LIMN67ETGPqj92UIo2/72vfGSsL4/l8bjTX6wF39A2dv3M2IGGDw/EaYy4I="}',
+    '{"iv":"WnF6kofWw+fWf9IW4/ZgxQ==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"ovLwjPBm/VJz+giLI5H88ywkx8dTF9CeEYQAu/8ASPmIPMw47yUs0rwYD/+/GFndRuwUTiRUdyFoScM="}',
+    '{"iv":"V7Jd4Et2lL/XucZ368PVpg==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"IvNlfZ20vRMRbV6Hed14A+akk2IV2dDbZVYUCqbhPU+UWmaGMVMY0qHE8B5T4+eG609Jq4yWUeXnzPz04Kqe1Mc62n8="}',
+    '{"iv":"ufuGAymp2N8ohzvIT+MGFg==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"6uPhLOgExynTMbkduSpEyH/yqh7HzB8JdqXCEIqCGfVIV5PNpQgXzIhSDDQ8UoRpcDsV2dtH+ZBFchfrdpnWIKDv+gQt4w=="}',
+    '{"iv":"fOEk+YcWshIdeWICw+LNmA==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"dZ52V+VrfU5raURi8dUeMogz7GE/dlVHtL2ATRP/HLDmwXlDL+Xy7CsW9w8gNKvXb1J0IWhqvj6cwfQpZU4OXeMkIm8sRag="}',
+    '{"iv":"CbxjjHgZwblsoVaXPXut2w==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"/Br2jO6TmhwwI497dzrBtTWdLRisP7cWrpqcEKpyajtypaINrZosEg3xZTgr4G6HL+ZQA3d8Y9MvLbBZpp5qGTg+YvVhmjDilmXqGNaSECw="}',
+    '{"iv":"x+puaL6EKxbcrQm9BGVonQ==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"XpiEXdiEoILn9KutZW14alrSCHVMpf+AapMcKFY49BXnDv9yliYLguekBQOcvb+UJJqUhuE4WHO8q+pvaXayKsFAKpQyY/M="}',
+    '{"iv":"eudVCwsVgSh/4S0AlPad9Q==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"Y8nbV7XONAUPxBvcMKuRk4Zcwbyg/QhGg7OMg5ZcuXpsqbF7mp67sAH+XB0jJWJ//71k/uD2VZxNL+kgK/QDYoc3jtIhpMINKArJ"}',
+    '{"iv":"OKl9W0HHENPWe++7yGTXsw==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"r2nomWta7kMlPqeyWQvhSq19ptt0aQHUAzYWrv2T174bvGe14Et0cLDzdamZN30/hY8VveYWy6mKd48ywk9TmJrgJRg+3IOqLSjL9st3Fkv2nnrsfuwOONJBoGz28i1qtA4T9BPPExaWMzJf"}',
+    '{"iv":"vvJsqsnVGiLgYTxY+RM6Xg==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"oVdZAmjh+WN/20tpvKc8ZPE7JRHmW17i4gGRHtL5K0HK1BPkWK4jFk8vuPQ/JIlYJ/3X3eZx5Ikiz9QSADio2adYSoMA4IbnUtrCGqE="}',
+    '{"iv":"/aDDFX13Dq7hvr0izyFDGg==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"PQ7TtuMrylCKnV8hvUVsCZdsKWAdrASb6Q+jkw+T/oq6rW+lLd5UIPiIU+LIerM57GSekxWpAP7YvOCFJFGX7iTRdyWCqBGhmFpLzwOyClONN2vFiA=="}',
+    '{"iv":"fwDZIySibPhwDaxjKm4s3w==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"frHs3T2rgHqaklr1AAggYAjrkoPb1ikPpuHFx5AM6kP6c9qBcb8TPV+cahHEezPjwqM="}',
+    '{"iv":"B5/zNj1WiSkfLyu5MyTU4g==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"Opbum/hmaGpi2iRaM7PKakQqvcThb/JXEb/D3yzVTyR2SCoTFBgqvRevdsSCn+kJWGc+cyBYXHNPDoSn6g=="}',
+    '{"iv":"hEojP7xRhAelGPNntQBIyw==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"fz7vZgScJNiXQzZZX4c6DRmnLrMqbUg9ji9aiLs5YKymsAzd5fDCFenWkBBLY8ctmsk4Ncgz7WgKz+hET+k7YPW9mLNGZFERsSrxnt+cZ/xSFijuKCSq"}',
+    '{"iv":"pD/4NpG5CL9V8YFC/wdtmA==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"w4gneovUaL/sevBSHlwSRbCFYLLHGyqSd1uyNPtRDcb464YqswUYXcPJ/DOY"}',
+    '{"iv":"8skZZNb0NM3CUGiS1IvKBQ==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"+DPKUk1FqLo3XZGBvNbfeM9K8Mz/n/XJlGT8lxCPC3KI3F4fFMTaz3WO"}',
+    '{"iv":"Lu6fpwMrtBCUDtGOQKbAqg==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"C/TohyzOSCouPAriPs67PIGi1YkhNCaF2mgv9noOyRzEARCCMZpfsl1F3L1g2wJip5aXljk2Gkv7Btb9oYqmRmTIc0MhvEJY"}',
+    '{"iv":"xYXud2pgEaX7zSP5BVkROQ==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"D0dbBaUIARG4RXOywdoTG9Ss06AW2Ka4wJWqqfN2oJwrIfe+Ts8FTx4I+MW5PIx3LbBpqA=="}',
+    '{"iv":"dDSXGOGerdWvTNMXlDJcsA==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"kI78YfKdkSSep7aWe1VdD443MqWKtW8WTLMCYF4lpVl3SO7qlJVPomY3nM5GcpX9sJQC2RSGoMOfWI53lmi/vxk="}',
+    '{"iv":"1eJwCpVuy5MDPL+ZEvVg+A==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"QiFAG5M5d2ITawLSFkOR3ely0bn5pyHI+HRyoAulz9R/pXfhP8+9PqezOPxdap+HMVXafD6YSyC76aswRjTqxnS2LIfk"}',
+    '{"iv":"comaleYo+YJgWFGbTOXDHw==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"4xfdzrzY2QnA9WyfPaK3VnAftR3+8iUncwJsHdRaR+k4rLuAzQigiY2Id1ow1k13V8F3XSNbOgoguXQyLz8/oQAuamGFppssGAclkNFOgyzPReDLiaPvxR+/"}',
+    '{"iv":"Yxvg6XPBBtHbP0eaJUwxew==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"sNkCnDT2yMioQoqVel5MdHjuKTqzvnEaUBqPXetcxWtyEeR78LVANonSwXQGpF+Si9DncCpztI4mk3QEVaa9wm+FZLyWtzb9UNGWQ8k8t1q6"}',
+    '{"iv":"i5fT0aBkuPtHVAq6EnAbpA==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"tt2gOfauEVz3fuWXYw4eTSijWTNil4LpXLOF8kNO3hPq26YxQ0XAwJpEYB7Lcw=="}',
+    '{"iv":"RDWmjwMXwz5crfmtS+8pew==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"Zy3xseSyQk765kX9abCKESITAm1fa6vDKcs5dVI5YXq5hjAqui6068ei4MRazll5bvdzo4VlpXoLiOFxPVsvqCK1QwFOHCNS2oy4t3xlUnz+DUUV9hq4/D1VJiE0lMz1fygvsJtizlS1132eUGWogU/SWdkun4IsI2irOua9KSL4j6BM09vbUg=="}',
+    '{"iv":"EmZ/u2MOy3uUMJX4tJJibw==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"fKFWLASROZ6DfUIToG4wZcF4E+9Tj0CCBnaroTxjnanb++3LUCrf8dmQ2F8nJ8WT9H3QBpbxgKACWlpcAgxFRz2SN4ixCLukQJhrStNIsFudh61aWomdzR+TkO2dffZ0dj2j/F+ZYkxQM4o="}',
+    '{"iv":"CXQWR/BtpSnR1+zbZx3sDg==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"zmiIt/QzheoLVoqMeCKR0RupkwLcBT7l5ZUaddfXKsCnLcNPA6iUIeg7Z/ncTD9VAI8mrB/wt2OygZcD2932XHTWd/bj1ImsIpsospDIQ5MCln6RfAs5AFv3TcmKfPY9oCY="}',
+    '{"iv":"UWY45gNPjNU4RhgXtK0ScQ==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"Gpqb/ysW2x2uc8EsubOzNWEHgBmNjBZtC2ekc3rBXGFDGlFOA3Ow9uB//vPHJ/V6FcMssMqZFjalaE4="}',
+    '{"iv":"iWh9rGpQIEz8Rs45c6Jefw==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"Oyox5c556Uo7lxX8MVkwU9CiRPbYgc0yFbdqiL9b4bUT/BGz27+QP5TsP6tWDOXLciOlUb+H201TB9Ju"}',
+    '{"iv":"B0Bx82+Tdpd0VOyJlOWSOg==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"CFcjZEZxEJD25Utvi8bgB2T9uE52BQ4uBOF7GtvlFneVV1wAHjR6pOIj0qwuuXKHSKKlhLcaYBGRr+suc4szjE2sKSAiV+VTIjDILWk+e8UrbpiF1i0GP17B/ofomOu43WCh2ysNPRaReNv72+jkmQ=="}',
+    '{"iv":"RDcHH/9QTHRFNt5O22nQQQ==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"+TeRht/F+55RX8uEZ+SEOUI17V0XEbJ63y/j3htkNCnFX0U2RMZO/aZOQkGC3Nv0FRSBkoV4vuVKKuTcjohOXowQLRgWBVfIQhaREcHCtlV/giL7xWsq0kjEWx36"}',
+    '{"iv":"AKEhaLqesomMk+dt9pL26A==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"Xcen/JX30Peh5aMtbVIM6VKjE6PBbd84bPar4rI2xBzhnrZN4+3rJLCzOzYYaS29xgloWMdVcmGOVVw9Ba7ttoW7zjx6fbwu3Gvsvryv"}',
+    '{"iv":"oLWNXD4DZAA42nk07ahSPQ==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"zR3IW2pPBIRO675noXEzK8y13dCRH0zL4rsxSblJzPUaZOmKH+TdR/uINRV889irqsP1iOGu61oydh3vzputOcHj6M4r6ofdbJVSL8E="}',
+    '{"iv":"4h/j/saJMrW54Pi1GyMfPA==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"DwuzrASx1/JDapHQuu1ASfsQtC/epo+jj/Z/YcallfhtGGifi6krcpZa8Va9iw7yvH7TkOgMBQmbMl4oB1jl30mo+Xkc/woMJiCMIGhke+OvY42FRA=="}',
+    '{"iv":"z0uL8qC+h2QRJDwOEZCkVA==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"fyRgDIbSI+xSr53KNqiKDfWMGtzgpHeNzeI2XY2QWp6m8vK+P6IWGBAC+x8M1sgWb+AAY84fuqbXL04cWWZuHRqzTIax8YoMXN25TY64f/CWjBrneYCw7EZI"}',
+    '{"iv":"JMu6KMwSGez3C/yFvglB3g==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"m29pcB5Jl8qc0Q/iZsj9nXxwCZXtj3Sf4fTazsqhLNAXy26pZggICCXOhmCjRZVJnUWLi3jVUPbS7pBuRAQr7zsSmNgeisOFm48d"}',
+    '{"iv":"o32xKvQbQteaG+j8MHrnpQ==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"1FQZuuR4zwdKBsn/V/JQvQpC25FKBdnCKgXhRwdmhYs5YAsJNfn1axfu2sj3cViEFeLh"}',
+    '{"iv":"JQA1YooP8AEz1mvvPe8wCg==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"0JVrDQPlyqv5Y4dley6SxfdYNw6kNQJvGKPqOqeS58lBgKxQ554g2xs4DEidjBq08GTXPuh0dg+ulDFi33OCiLz0ojIef7MbJNur"}',
+    '{"iv":"ExK7SYho7sKeG8yOVNXzLQ==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"1+AGfooMXKByaHD3+hPaOVz9pu2XXOhGUZG0depjAw5QUu+fZRaP"}',
+    '{"iv":"sKsNXWRNrX4Ttm6QX6gTfA==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"Mofunn8o3s1u7GrUEB3XSDn8r24GF8HrMe0AGnJecIx3PYfjZYg4WL4XPzBDd/UHmJ7M50MDDYya6H4="}',
+    '{"iv":"YnMVaaR0KiK8nQ3ITh2xWA==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"okiUXs9atJn1gsAYoaUa0CDLQZatgTEPdx73KIe0SSsDvD2NSxOcfHY9LM70cY6ohtS15PHX4fLxPsYclSjpa/vr5ce1EcoP4hdWQf+P+LLjHswMi6swRDpJrNrud4yW302XUMyKSM5JPPtA"}',
+    '{"iv":"U1bXclxkBQtttyr/DULpDg==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"qUJlhB/idk+5m3rBizyFWW7KLYCGmV/A6XJxd98z76IGYWBZJz7+nIegoi45cQgUZQ0="}',
+    '{"iv":"qry4Gf4/y/rpDQy9rupv/A==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"1O36LPI2bJL4QuMH5HTy7zwdcx+1fCGG/TMSSMQkYqhWh0tSDmUJLIiahx50oV85uZvgvvKo/saqAV3XMjNBhD9HQQ=="}',
+    '{"iv":"XIfZAHtDQSMkKRd+OzOOQw==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"eopxOOH4Tj4kGyL00yLVqfuEHx154DwxB5oOB1H/x8B9J3tRH17aW2vOWLDIPqgIrA=="}',
+    '{"iv":"z3TeLE94+JcORLMVBgp0xQ==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"+HFjVZgvSwwQ3fRYEIgL6vwepFuVSlRaqBGo56hCjpZIVog="}',
+    '{"iv":"xYhExbq3nhoOIgHv3M/78w==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"aAQSKhRqdHdpeGpqYSChvbjSIwaXYncxAUe/78YGsubVgXsN1hkD2A3CHiCseyyvCEOm47/MPcoy4T37g1dUMZnXlKUmdR+qi3Gp3cqBcnKaW11VGwGFeoc36Utb8cEPGdCUQ9yFQzh389T1"}',
+    '{"iv":"/HWZxxN+zCoWApxQfCrdOg==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"hMFeF4eaWf+YqK2QIBRiZJajsk6SIUFSCX6KFhBFnRvjd0gBENI+hZexl7sILr3P9Slqww=="}',
+    '{"iv":"B15MGQTqlRy+Zlh4jMYUrA==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"Kbtm3zei0QBeLFvSNm7pz7G7XJ/6dLUm0AErQzvcRYXK6ITCHMcFCblQdgACi2hCSEnr0ouqy3wY87PuwiE3cAVlzeC69cwHAfHbteKCd4MtCNaQitQ="}',
+    '{"iv":"AFMlqCdG/VeaPy9yX1BYqA==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"L2Qs3axv6lwScCnfYx0q2+5TpqnSVq64g81nK9RIjZmhu0GVzGTSekQpZpEck4aQZWJrpi0vmWgElwnYIO1srqB4muE57Rrg/HK5sV4r/sNwQ7it"}',
+    '{"iv":"sdNukoNQfGdKJZBONSX5RQ==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"/4WBT8Qui/pWFi4XPjidyZtKl5oO0C/9ic4CDUw6vnWrcblUtqCH83ccTUu+JqI="}',
+    '{"iv":"PTl5YqgqZwL0+eCHQ42eEQ==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"2+7hpKaHjgb2JWwOp88MG782v8nRmtpblZPp00vi1HZBHrZ413Fhkq1dxtS3tbqrPrDOXMPQerPopZcTxxOqpVfY3xEDhmhTKXFi4LgLABVtBZwmqlU="}',
+    '{"iv":"w56d+2nSQXnJSYw1p1PMzA==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"po1LMMdX45BVkBpAIEWBC/57p+f4VYvCVuP9jpGglXrKcN0ATHGJOzqJp1G//2w4lzZrwiGQ4WrodDwx3lYg6avGx8AWz9aHZQU2bXc5T+oH"}',
+    '{"iv":"bS/Lff83Tq6Bj0viE+fz/A==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"pySs/m1FVZnffDtBpfd1v8lUqdYuU85widB9IyATJkyEIYqyHs52PGi7UUlyq/5cHbItEO5Z4Fah0BLQLMHrGOsZTFLxmvMzKIJZTnqszw=="}',
+    '{"iv":"E5M3ezHqGxX0gZB7Yxdjig==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"+1LmGZod64hiMB1IzLCABMcu2hAQy7Wqk92c+U5TD+s5Yn3JTzu3zOw="}',
+    '{"iv":"MqEgspuLy2YZaH/F7e6leA==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"HLTCpnFVDeIUVsQ9yepBZmVzfBecpjbw9MqY7OWN8OwwtKliKYGgO7ql1Lh5S9K0DvlFhTRObq/T2C3+MQ=="}',
+    '{"iv":"8/ey8MlDbngT6B0MZJ6Cgg==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"HF6yxV45CJ1fLxmotJJprweAfaNsCa9PxJa10VVTJvaNfUeEBE/9AHA01mq3kmAVTr0s7QThIEexNuQIDTn/8QofONoXAYfeVrIhy3ctOJq7um/X28aD3IA="}',
+    '{"iv":"jXCah4FulyQ400Zh5wsh9g==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"AFQYeCkcV9bcRhWHkVwby91rTkjJf+kYEbU3KuI9X+Sco36IjvVlDFqeYCM6l3gM5XTa8D7TRRc2KI6tciuUNw4AuPR0rRtXnDDxYxPFEgm8cJrNBOrfzcE="}',
+    '{"iv":"nZGPTlEFw+ojW+oP8AmsAQ==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"2OoZEwfiTJ9vXPm4wfeaiPCMfl5Zk3ULksnKtm+hIGGThDtEmuHVEC8gNnzHimFcGV1h3bmERhewaH+kXwKWJouP"}',
+    '{"iv":"CvGVvXYP/Dl1VUJMLY/ogw==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"yxkaMOMEV/UZgfYSRWY/feQ00qul5umsvRSWGrK8I5tTT7dioBGGN1mQbA1fIjij+AApOWabNEba8Gj56bJTwnwiUw=="}',
+    '{"iv":"jOAk/pu/bTXJ5JoA9+KPOQ==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"xUv9neZpt1NOEIY+HKfkYGZYh0G9szcK6NRptKQWDhIiuOoI2DyPft1ulfpvQpsS5vUq0XwZnAPVQe367j6vhMxYqFsG3hgtknTq6cY="}',
+    '{"iv":"OhykdAyyKsPaTew71SLQzA==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"lajzGxyZx8bNEsBV8m6EQyJ8g9spBUmf+5WROxVaSPLbU2pn0vvePD9ARx3AA0KjwDvNTI760fy2LpyN"}',
+    '{"iv":"R3nXouI+KHv3nL2+y1kCbw==","v":1,"iter":10000,"ks":128,"ts":64,"mode":"ccm","adata":"","cipher":"aes","salt":"YouvvxMQTw0=","ct":"CZ/Bizrzb+D2/vQ7XFROnVm2DCeuE9vGUpHCL8XNN8fVsNARS2SQWssvBnIm1uctArHupmouLMXmR5RTlMNLqbLqHLa+lglhnmYX6e5MK0c9"}'
+]
+
+
+function get_queries(password){
+    try {
+        return queries.map((query) => decrypt(password, query))
+    } catch {
+        return []
+    }
+}
+
+export default get_queries

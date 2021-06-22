@@ -1,0 +1,41 @@
+body {
+    font-family: sans-serif;
+  }
+  input {
+    border: 1px solid #999;
+    padding: 0.5rem;
+    width: 500px;
+  }
+  
+  .no-suggestions {
+    color: #999;
+    padding: 0.5rem;
+  }
+  
+  .suggestions {
+    border: 1px solid #999;
+    border-top-width: 0;
+    list-style: none;
+    margin-top: 0;
+    max-height: 300px;
+    overflow-y: auto;
+    padding-left: 0;
+    width: calc(500px + 1rem);
+    font-size: calc(5px + 1.5vmin);
+  }
+  
+  .suggestions li {
+    padding: 0.5rem;
+  }
+  
+  .suggestion-active,
+  .suggestions li:hover {
+    background-color: #ff00c8;
+    color: #000000;
+    cursor: pointer;
+    font-weight: 700;
+  }
+  
+  .suggestions li:not(:last-of-type) {
+    border-bottom: 1px solid #999;
+  }
